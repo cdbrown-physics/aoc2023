@@ -28,10 +28,19 @@ std::vector<std::string> loopOverString(const std::string & input)
     // to trun those into the two digit number
     vsNumbers.push_back(result[0]);
     vsNumbers.push_back(result.back());
+    if (vsNumbers.size() > 2)
+    {
+        cout << vsNumbers.size() << endl;
+        throw std::range_error("Too many values returned");
+    }
+    for (int i = 0; i < vsNumbers.size(); i++)
+    {
+        
+    }
     return vsNumbers;
 }
 
-int spelledNumberToChar(const std::string & spelledNumber)
+char spelledNumberToChar(const std::string & spelledNumber)
 {
     std::map<std::string, char> numberMap = {{"one", '1'},
                                             {"two", '2'},
@@ -47,9 +56,14 @@ int spelledNumberToChar(const std::string & spelledNumber)
     {
         return it->second;
     }
-    else
+    else if (spelledNumber.size() > 1) // spelledNumber is just the number char
     {
-        return -1;
+        return (char)spelledNumber[0];
+    }
+    else // Something went wrong, throw exception
+    {  
+        cout << spelledNumber << endl;
+        throw std::runtime_error("Bad value for spelledNumber");
     }
 
 }
@@ -66,7 +80,10 @@ int main()
     {
         cout << "Looking at the line " << line_input << endl;
         vsNumbers = loopOverString(line_input);
-        // If one of the numbers is the spelled out version I need to turn it into the single char
+        // vsNumbers should be the single char characters now
+        iLineNumber = atoi(line_number_chars);
     }
     MyReadFile.close();
+
+    return 0;
 }
