@@ -13,17 +13,36 @@ using std::endl;
 std::vector<std::string> loopOverString(const std::string & input)
 {
     std::vector<std::string> vsNumbers;
-    char last_char_number;
     std::vector<std::string> result;
     std::smatch match;
-    std::regex r("(one|two|three|four|five|six|seven|eight|nine|1|2|3|4|5|6|7|8|9)");
-    
+    std::regex pattern("(one|two|three|four|five|six|seven|eight|nine|1|2|3|4|5|6|7|8|9)");
+    // std::regex pattern(R"((one|two|three|four|five|six|seven|eight|nine|\d))");
     std::string::const_iterator searchStart(input.cbegin());
-    while (std::regex_search( searchStart, input.cend(), match, r))
-    {
+    int i = 0;
+    std::string searchString = input;
+    while (std::regex_search( searchStart, input.cend(), match, pattern))
+    {  
         result.push_back(match[0]);
+        cout << "The match was: " << match[0] << endl;
+        cout << "Match suffix: " << match.suffix().str() << endl;
+        cout << "Match suffix size: " << match.suffix().str().size() << endl;
         searchStart = match.suffix().first;
+        if (searchStart == input.cend())
+        {
+            break;
+        }
+        else
+        {
+            searchStart -= 1;
+        }
+        cout << "I'm looking at: " << *searchStart << endl;
+        i++;
+        if (i > 4)
+        {
+            break;
+        }
     }
+    throw std::runtime_error("Fuck this");
     // result will be a vector of string found in the input string now I need 
     // to trun those into the two digit number
     vsNumbers.push_back(result[0]);
@@ -32,10 +51,6 @@ std::vector<std::string> loopOverString(const std::string & input)
     {
         cout << vsNumbers.size() << endl;
         throw std::range_error("Too many values returned");
-    }
-    for (int i = 0; i < vsNumbers.size(); i++)
-    {
-        
     }
     return vsNumbers;
 }
@@ -56,23 +71,25 @@ char spelledNumberToChar(const std::string & spelledNumber)
     {
         return it->second;
     }
-    else if (spelledNumber.size() > 1) // spelledNumber is just the number char
+    else if (spelledNumber.size() == 1) // spelledNumber is just the number char
     {
         return (char)spelledNumber[0];
     }
     else // Something went wrong, throw exception
     {  
-        cout << spelledNumber << endl;
+        cout << "This is the spelledNumber: " << spelledNumber << endl;
+        cout << spelledNumber.size() << endl;
         throw std::runtime_error("Bad value for spelledNumber");
     }
 
 }
 
-int main()
+int main(int argc, char* argv[])
 {
     std::string line_input = "";
-    std::ifstream MyReadFile("test_input_two.txt");
+    std::ifstream MyReadFile(argv[1]);
     std::vector<std::string> vsNumbers;
+    char* line_number_chars = new char[2];
     int iLineNumber = 0;
     unsigned long int answer = 0;
 
@@ -80,9 +97,17 @@ int main()
     {
         cout << "Looking at the line " << line_input << endl;
         vsNumbers = loopOverString(line_input);
+        for (int i = 0; i < vsNumbers.size(); i++)
+        {
+            line_number_chars[i] = spelledNumberToChar(vsNumbers[i]);
+        }
         // vsNumbers should be the single char characters now
         iLineNumber = atoi(line_number_chars);
+        cout << "The numbers in that line are " << iLineNumber << endl;
+        answer += iLineNumber;
+        cout << "Running total " << answer << endl;
     }
+    cout << "Answer to part two is: " << answer << endl;
     MyReadFile.close();
 
     return 0;
