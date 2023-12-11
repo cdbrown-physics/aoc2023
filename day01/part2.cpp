@@ -6,6 +6,8 @@
 #include <regex>
 #include <vector>
 #include <map>
+#include <chrono>
+#include <thread>
 
 using std::cout;
 using std::endl;
@@ -18,31 +20,27 @@ std::vector<std::string> loopOverString(const std::string & input)
     std::regex pattern("(one|two|three|four|five|six|seven|eight|nine|1|2|3|4|5|6|7|8|9)");
     // std::regex pattern(R"((one|two|three|four|five|six|seven|eight|nine|\d))");
     std::string::const_iterator searchStart(input.cbegin());
-    int i = 0;
+    int lastSuffixSize = 0;
     std::string searchString = input;
     while (std::regex_search( searchStart, input.cend(), match, pattern))
     {  
         result.push_back(match[0]);
-        cout << "The match was: " << match[0] << endl;
-        cout << "Match suffix: " << match.suffix().str() << endl;
-        cout << "Match suffix size: " << match.suffix().str().size() << endl;
-        searchStart = match.suffix().first;
-        if (searchStart == input.cend())
+        // cout << "The match was: " << match[0] << endl;
+        // cout << "Match suffix: " << match.suffix().str() << endl;
+        // cout << "Match suffix size: " << match.suffix().str().size() << endl;
+        searchStart = match.suffix().first - 1;
+        if ( match.suffix().str().size() <= 1 )
         {
             break;
         }
-        else
+        if (lastSuffixSize == match.suffix().str().size())
         {
-            searchStart -= 1;
+            // Then I'm stuck and I need to move forward
+            searchStart += 1;
         }
-        cout << "I'm looking at: " << *searchStart << endl;
-        i++;
-        if (i > 4)
-        {
-            break;
-        }
+        lastSuffixSize = match.suffix().str().size();
+        // std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
-    throw std::runtime_error("Fuck this");
     // result will be a vector of string found in the input string now I need 
     // to trun those into the two digit number
     vsNumbers.push_back(result[0]);
