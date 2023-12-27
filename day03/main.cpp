@@ -16,7 +16,7 @@ std::vector<std::string> findNumbersInLine(const std::string & input)
     return numbers;
 }
 
-std::map<std::string, int> FOOBAR(std::string input, int offSet) 
+std::map<std::string, int> makeLineMap(std::string input, int offSet) 
 {
     std::vector<std::string> numbers = findNumbersInLine(input);
     // mapEntrys.reserve(numbers.size());
@@ -52,12 +52,7 @@ int main(int argc, char* argv[])
         int size = line_input.size();
         cout << "size: " << size << endl;
         cout << line_input << endl;
-        // std::vector<std::string> numbers = findNumbersInLine(line_input);
-        // for (auto n: numbers)
-        // {
-            // cout << n << endl;
-        // }
-        FOOBAR(line_input, offSet);
+        std::map<std::string, int> mapLine = makeLineMap(line_input, offSet);
         offSet += line_input.size();
         return 0;
     }
