@@ -16,26 +16,21 @@ std::vector<std::string> findNumbersInLine(const std::string & input)
     return numbers;
 }
 
-std::map<std::string, int> makeLineMap(std::string input, int offSet) 
+std::map<std::vector<int>, int> makeLineMap(std::string input, int offSet) 
 {
     std::vector<std::string> numbers = findNumbersInLine(input);
     // mapEntrys.reserve(numbers.size());
-    std::map<std::string, int> mapLine; // Map for this one line of the file
+    std::map<std::vector<int>, int> mapLine; // Map for this one line of the file
     for (auto n: numbers)
     {
-        // std::map<std::string, int> mapEntry;
-        cout << n << endl;
         // Get the position of those sub string
         size_t pos = input.find(n);
-        cout << "found at: " << pos << " - " << pos + n.size() -1 << endl;
-        // Turn that possition into a string map key
-        std::string mapKey = "";
         int posInt = static_cast<int>(pos);
+        std::vector<int> mapKey;
         for(int i = posInt; i < posInt + n.size(); i++)
         {
-            mapKey += std::to_string(i + offSet) + ",";
+            mapKey.push_back(i + offSet);
         }
-        cout << "This is the mapKey: " << mapKey << endl;
         mapLine[mapKey] = stoi(n);
     }
     // Now that I have the map entries, I want to add them to the master map
@@ -45,17 +40,27 @@ std::map<std::string, int> makeLineMap(std::string input, int offSet)
 int main(int argc, char* argv[])
 {
     std::string line_input = "";
+    std::map<std::vector<int>, int> mainMap;
     std::ifstream MyReadFile(argv[1]);
     int offSet = 0;
     while(std::getline (MyReadFile, line_input))
     {
         line_input.erase(std::remove(line_input.begin(), line_input.end(), '\n'), line_input.end());
         int size = line_input.size();
-        cout << "size: " << size << endl;
-        cout << line_input << endl;
-        std::map<std::string, int> mapLine = makeLineMap(line_input, offSet);
+        std::map<std::vector<int>, int> mapLine = makeLineMap(line_input, offSet);
         offSet += line_input.size();
-        return 0;
+        mainMap.insert(mapLine.begin(), mapLine.end());
+
+        // Now I have a map of all of the numbers in the data file. I need to do the same for the 
+    }   
+    for (const auto &pair: mainMap)
+    {
+        cout << "Key: " ;
+        for (int i: pair.first)
+        {
+            cout << i << ',';
+        }
+        cout <<  " Value: " << pair.second << endl;
     }
     return 0;
 }
