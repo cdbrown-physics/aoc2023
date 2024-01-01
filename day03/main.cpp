@@ -40,7 +40,7 @@ std::map<std::vector<int>, int> makeLineMap(std::string input, int offSet)
 int main(int argc, char* argv[])
 {
     std::string line_input = "";
-    std::map<std::vector<int>, int> mainMap;
+    std::map<std::vector<int>, int> numbersMap;
     std::ifstream MyReadFile(argv[1]);
     int offSet = 0;
     while(std::getline (MyReadFile, line_input))
@@ -49,11 +49,9 @@ int main(int argc, char* argv[])
         int size = line_input.size();
         std::map<std::vector<int>, int> mapLine = makeLineMap(line_input, offSet);
         offSet += line_input.size();
-        mainMap.insert(mapLine.begin(), mapLine.end());
-
-        // Now I have a map of all of the numbers in the data file. I need to do the same for the 
+        numbersMap.insert(mapLine.begin(), mapLine.end());
     }   
-    for (const auto &pair: mainMap)
+    for (const auto &pair: numbersMap)
     {
         cout << "Key: " ;
         for (int i: pair.first)
@@ -61,6 +59,12 @@ int main(int argc, char* argv[])
             cout << i << ',';
         }
         cout <<  " Value: " << pair.second << endl;
+    }
+    // Now that i have the map of all of the numbers and their location, I'll need 
+    while std::getline(MyReadFile, line_input)
+    {
+        // Need to read each line for a symbol, and then get the possition, offset and all
+        
     }
     return 0;
 }
